@@ -23,6 +23,7 @@ const CONFIG = {
   blog: {
     title: "Jinwooim Blog",
     description: "Welcome to My Blog!",
+    scheme:"dark"
   },
 
   // CONFIG configration (required)
