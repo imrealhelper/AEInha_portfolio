@@ -1,10 +1,10 @@
 const CONFIG = {
   // profile setting (required)
   profile: {
-    name: "jinwooim",
+    name: "Jin-Woo-Im",
     image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "Undergraduate student researcher",
-    bio: "I am an undergraduate research student in iASL(inha Autonomous system lab) at Inha University.",
+    bio: "I am an undergraduate research student in ACSL(Aerospace Convrol System Lab) at Inha University.",
     email:"jinwooiminha@gmail.com",
     linkedin: "jinwoo-im-aero",
     github: "imrealhelper",
