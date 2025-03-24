@@ -137,22 +137,43 @@ export const getPosts = async (): Promise<TPosts> => {
 
     // 헬퍼 함수: 게시글의 날짜를 안전하게 추출
     const getPostDate = (post: any): number => {
-      let dateStr = post.createdTime;
-      if (post.date && typeof post.date === "object" && post.date.start_date) {
-        dateStr = post.date.start_date;
+      // post가 없거나 객체가 아닌 경우 0 반환
+      if (!post || typeof post !== "object") return 0;
+      
+      // 날짜 추출 시도
+      try {
+        // 1. date 객체가 있고 start_date가 있으면 사용
+        if (post.date && 
+            typeof post.date === "object" && 
+            post.date.start_date) {
+          const time = new Date(post.date.start_date).getTime();
+          if (!isNaN(time)) return time;
+        }
+        
+        // 2. createdTime이 있으면 사용
+        if (post.createdTime) {
+          const time = new Date(post.createdTime).getTime();
+          if (!isNaN(time)) return time;
+        }
+        
+        // 3. 그 외의 경우 현재 시간 반환
+        return 0;
+      } catch (error) {
+        console.warn("게시글 날짜 추출 중 오류 발생:", error);
+        return 0;
       }
-      const time = new Date(dateStr).getTime();
-      return isNaN(time) ? 0 : time;
     };
 
+    // 유효한 게시글만 필터링
+    const validData = data.filter(post => post && typeof post === "object");
+    
     // 최신 게시글이 위로 오도록 날짜 기준 정렬
-    data.sort((a, b) => getPostDate(b) - getPostDate(a));
+    validData.sort((a, b) => getPostDate(b) - getPostDate(a));
 
-    console.log(`✅ 총 ${data.length}개의 게시글을 성공적으로 가져왔습니다.`);
-    return data;
+    console.log(`✅ 총 ${validData.length}개의 게시글을 성공적으로 가져왔습니다.`);
+    return validData;
   } catch (error) {
     console.error("❌ getPosts() 전체 오류 발생:", error);
     return [];
   }
 };
-
