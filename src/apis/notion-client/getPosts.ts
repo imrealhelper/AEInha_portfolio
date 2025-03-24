@@ -139,11 +139,17 @@ export const getPosts = async (): Promise<TPosts> => {
       data.push(properties);
     }
 
-    // 최신 게시글이 위로 오도록 날짜 기준 정렬
+    // 게시글의 날짜 정보를 안전하게 가져오는 헬퍼 함수
+    const getPostDate = (post: any) => {
+      if (post?.date && typeof post.date === "object" && post.date.start_date) {
+        return post.date.start_date;
+      }
+      return post.createdTime;
+    };
+
+    // 최신 게시글이 위로 오도록 날짜 기준 정렬 (date가 없으면 createdTime 사용)
     data.sort(
-      (a, b) =>
-        new Date(b.date?.start_date || b.createdTime).getTime() -
-        new Date(a.date?.start_date || a.createdTime).getTime()
+      (a, b) => new Date(getPostDate(b)).getTime() - new Date(getPostDate(a)).getTime()
     );
 
     console.log(`✅ 총 ${data.length}개의 게시글을 성공적으로 가져왔습니다.`);
@@ -153,3 +159,4 @@ export const getPosts = async (): Promise<TPosts> => {
     return [];
   }
 };
+
