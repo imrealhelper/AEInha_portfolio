@@ -5,7 +5,7 @@ import getPageProperties from "src/libs/utils/notion/getPageProperties";
 import { TPosts } from "src/types";
 import pLimit from "p-limit";
 
-// 예시 CONFIG (실제 사용 시 site.config에서 불러오거나 환경변수를 사용하세요)
+// 예시 CONFIG (실제 사용 시 site.config 또는 환경변수에서 불러오세요)
 const CONFIG = {
   notionConfig: {
     pageId: "YOUR_NOTION_PAGE_ID"
@@ -43,6 +43,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Notion에서 게시글 데이터를 가져오는 함수
 export async function getPosts(): Promise<TPosts> {
+  // 요청하신대로 CONFIG에서 pageId를 추출하는 코드
   let id = CONFIG.notionConfig.pageId as string;
   if (!id) {
     console.error("❌ Notion pageId 값이 설정되지 않았습니다.");
@@ -51,7 +52,7 @@ export async function getPosts(): Promise<TPosts> {
 
   const api = new NotionAPI();
 
-  // 페이지 데이터 가져오기
+  // Notion 페이지 데이터 가져오기
   let response;
   try {
     response = await fetchWithThrottle(() => api.getPage(id), "getPage");
@@ -148,3 +149,4 @@ export async function getPosts(): Promise<TPosts> {
   console.log(`✅ 총 ${data.length}개의 게시글을 성공적으로 가져왔습니다.`);
   return data;
 }
+
